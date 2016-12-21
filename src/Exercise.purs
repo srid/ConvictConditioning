@@ -1,6 +1,8 @@
 module App.Exercise where
 
 import Prelude (($))
+import Pux.Html (Html)
+import Pux.Html as H
 
 data Exercise 
   = PushUp Steps 
@@ -35,11 +37,15 @@ pushUp =
     ]
     where s = Standard
 
-exercises :: Array Exercise 
-exercises = 
+allExercises :: Array Exercise 
+allExercises = 
   [ pushUp  ]
 
 -- 
 
 type ExerciseCursor = (Steps -> Exercise) 
+
+view :: forall action. Array Exercise -> Html action
+view exercises =
+  H.div [] [ H.text "All exercises" ]
 

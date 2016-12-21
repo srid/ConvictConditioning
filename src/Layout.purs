@@ -1,27 +1,27 @@
 module App.Layout where
 
-import App.Counter as Counter
 import App.NotFound as NotFound
+import App.Exercise (Exercise)
+import App.Exercise as Exercise
 import App.Routes (Route(Home, NotFound))
-import Prelude (($), map)
 import Pux.Html (Html, div, h1, text)
 
 data Action
-  = Child (Counter.Action)
-  | PageView Route
+  = PageView Route
 
 type State =
   { route :: Route
-  , count :: Counter.State }
+  , exercises :: Array Exercise
+  }
 
 init :: State
 init =
   { route: NotFound
-  , count: Counter.init }
+  , exercises: Exercise.allExercises 
+  }
 
 update :: Action -> State -> State
 update (PageView route) state = state { route = route }
-update (Child action) state = state { count = Counter.update action state.count }
 
 view :: State -> Html Action
 view state =
@@ -29,6 +29,6 @@ view state =
     []
     [ h1 [] [ text "Convict Conditioning" ]
     , case state.route of
-        Home -> map Child $ Counter.view state.count
+        Home -> Exercise.view state.exercises
         NotFound -> NotFound.view state
     ]
