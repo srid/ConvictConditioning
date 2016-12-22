@@ -2,6 +2,7 @@ module App.Layout where
 
 import App.NotFound as NotFound
 import App.Exercise as Exercise
+import App.Data as Data
 import App.Routes (Route(Home, NotFound))
 import Pux.Html (Html, div, h1, text)
 
@@ -16,7 +17,7 @@ type State =
 init :: State
 init =
   { route: NotFound
-  , allSeries: Exercise.beginnerSeries 
+  , allSeries: Data.beginnerSeries 
   }
 
 update :: Action -> State -> State

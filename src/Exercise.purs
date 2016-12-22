@@ -14,11 +14,14 @@ newtype ExerciseSeries = ExerciseSeries
   , steps :: Steps
   }
 
+-- Should be D10 eventually
 type Steps = Vec D2 Step
 
 data Exercise 
   = PushUp 
   | LegRaise 
+  | PullUp
+  | Squat
 
 newtype Step = Step 
   { title :: String
@@ -59,18 +62,6 @@ step title goals = Step { title: title, goals: goals }
 
 series :: Exercise -> Steps -> ExerciseSeries
 series exercise steps = ExerciseSeries { exercise: exercise, steps: steps }
-
-pushUp :: ExerciseSeries
-pushUp = series PushUp
-   $ step "Wall Pushups" 
-      (beginner 1 10 +> intermediate 2 25 +> progression 3 50 +> empty)
-  +> step "Incline Pushups" 
-      (beginner 1 10 +> intermediate 2 20 +> progression 3 40 +> empty)
-  +> empty
-
-beginnerSeries :: Array ExerciseSeries
-beginnerSeries = [ pushUp  ]
-
 -- 
 
 -- View 
