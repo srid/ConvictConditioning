@@ -1,51 +1,100 @@
 module App.Exercise where
 
-import Prelude (($))
-import Pux.Html (Html)
+import Data.Vec
 import Pux.Html as H
+import Data.Monoid ((<>))
+import Data.Typelevel.Num (class Lt, class Nat, D10, D2, D0, D3, reifyInt, (==))
+import Data.Typelevel.Num.Sets (toInt)
+import Prelude (($))
+import Prelude (($), (<<<), map)
+import Pux.Html (Html)
+
+newtype ExerciseSeries = ExerciseSeries 
+  { exercise :: Exercise 
+  , steps :: Steps
+  }
+
+type Steps = Vec D2 Step
 
 data Exercise 
-  = PushUp Steps 
-  | LegRaise Steps
+  = PushUp 
+  | LegRaise 
 
-type Steps = Array Step
+newtype Step = Step 
+  { title :: String
+  , goals :: Goals
+  }
+
+type Goals = Vec D3 Goal 
+
+newtype Goal = Goal 
+  { standard :: Standard 
+  , sets :: Sets 
+  , reps :: Reps 
+  }
+
+data Standard 
+  = Beginner 
+  | Intermediate 
+  | Progression
+
+beginner :: Sets -> Reps -> Goal 
+beginner = goal Beginner
+
+intermediate :: Sets -> Reps -> Goal 
+intermediate = goal Intermediate
+
+progression :: Sets -> Reps -> Goal 
+progression = goal Progression
+
+goal :: Standard -> Sets -> Reps -> Goal 
+goal standard sets reps = Goal $ f standard sets reps
+  where f = { standard: _, sets: _, reps: _ }
+
 type Sets = Int 
 type Reps = Int
 
-data Step 
-  = One String Standards
-  | Two String Standards 
-  | Three String Standards
-  | Four String Standards
+step :: String -> Goals -> Step 
+step title goals = Step { title: title, goals: goals }
 
-step :: (String -> Standards -> Step) -> String -> BeginnerStandard -> IntermediateStandard -> ProgressionStandard -> Step 
-step c name s1 s2 s3 = c name $ Standards s1 s2 s3  
+series :: Exercise -> Steps -> ExerciseSeries
+series exercise steps = ExerciseSeries { exercise: exercise, steps: steps }
 
-data Standards = Standards BeginnerStandard IntermediateStandard ProgressionStandard
+pushUp :: ExerciseSeries
+pushUp = series PushUp
+   $ step "Wall Pushups" 
+      (beginner 1 10 +> intermediate 2 25 +> progression 3 50 +> empty)
+  +> step "Incline Pushups" 
+      (beginner 1 10 +> intermediate 2 20 +> progression 3 40 +> empty)
+  +> empty
 
-type BeginnerStandard = Standard
-type IntermediateStandard = Standard 
-type ProgressionStandard = Standard
-
-data Standard = Standard Sets Reps 
-
-pushUp :: Exercise 
-pushUp = 
-  PushUp
-    [ step One "Wall Pushups" (s 1 10) (s 2 25) (s 3 50) 
-    , step Two "Incline Pushups" (s 1 10) (s 2 20) (s 3 40)
-    ]
-    where s = Standard
-
-allExercises :: Array Exercise 
-allExercises = 
-  [ pushUp  ]
+beginnerSeries :: Array ExerciseSeries
+beginnerSeries = [ pushUp  ]
 
 -- 
 
-type ExerciseCursor = (Steps -> Exercise) 
+-- View 
 
-view :: forall action. Array Exercise -> Html action
-view exercises =
-  H.div [] [ H.text "All exercises" ]
+{-class HtmlView state where 
+  viewHtml :: forall action. state -> Html action
+
+instance htmlViewExercise :: HtmlView Exercise where 
+  viewHtml (PushUp steps) = H.div [] $ [heading] <> map viewHtml steps
+    where heading = H.h2 [] [ H.text "Push Up" ]
+  viewHtml (LegRaise steps) = H.div [] $ [heading] <> map viewHtml steps
+    where heading = H.h2 [] [ H.text "Leg Raise" ]
+
+instance htmlViewStep :: HtmlView Step where 
+  viewHtml step = H.div [] [ H.text (name step) ]
+    where name (One name _) = name 
+          name (Two name _) = name 
+          name (Three name _) = name 
+          name (Four name _) = name
+
+instance htmlViewExercises :: HtmlView (Array Exercise) where 
+  viewHtml = H.div [] <<< map viewHtml-}
+
+view :: forall action. Array ExerciseSeries -> Html action
+-- view = viewHtml
+view _ = H.div [] []
 

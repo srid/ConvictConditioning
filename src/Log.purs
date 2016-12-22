@@ -6,10 +6,10 @@ import Data.Date (Date, Month(..), canonicalDate)
 import Data.Date.Component (Day, Year)
 import Data.List (List)
 
-type Log = List LogEntry 
+-- type Log = List LogEntry 
 
 
-data LogEntry = LogEntry Date ExerciseCursor 
+-- data LogEntry = LogEntry Date ExerciseCursor 
 
 -- sampleEntry :: LogEntry 
 -- sampleEntry = LogEntry date PushUp 
