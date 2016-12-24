@@ -5,25 +5,25 @@ import Data.Vec ((+>), empty)
 import Prelude (($))
 
 beginnerSeries :: Array ExerciseSeries
-beginnerSeries = [ pushUp, legRaise, pullUp, squat  ]
+beginnerSeries = [ pushUp ] -- , legRaise, pullUp, squat  ]
 
 pushUp :: ExerciseSeries
-pushUp = series PushUp
-   $ step "Wall Pushups" 
+pushUp 
+   = step PushUp WallPushup
       (beginner 1 10 +> intermediate 2 25 +> progression 3 50 +> empty)
-  +> step "Incline Pushups" 
+  +> step PushUp InclinePushup
       (beginner 1 10 +> intermediate 2 20 +> progression 3 40 +> empty)
   +> empty
   
-legRaise :: ExerciseSeries
-legRaise = series LegRaise
-   $ step "Knee Tucks" 
+legRaise :: ExerciseSeries 
+legRaise
+   = step LegRaise KneeTucks
       (beginner 1 10 +> intermediate 2 25 +> progression 3 40 +> empty)
-  +> step "Flat Knee Raises" 
+  +> step LegRaise FlatKneeRaises
       (beginner 1 10 +> intermediate 2 20 +> progression 3 35 +> empty)
   +> empty
 
-pullUp :: ExerciseSeries
+{-pullUp :: ExerciseSeries
 pullUp = series PullUp
    $ step "Vertical Pulls" 
       (beginner 1 10 +> intermediate 2 20 +> progression 3 40 +> empty)
@@ -38,3 +38,4 @@ squat = series Squat
   +> step "Jackknife Squats" 
       (beginner 1 10 +> intermediate 2 20 +> progression 3 40 +> empty)
   +> empty
+-}
