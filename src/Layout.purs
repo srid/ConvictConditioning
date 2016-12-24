@@ -1,7 +1,8 @@
 module App.Layout where
 
 import App.NotFound as NotFound
-import App.Exercise as Exercise
+import App.Types (Series)
+import App.View as View
 import App.Data as Data
 import App.Routes (Route(Home, NotFound))
 import Pux.Html (Html, div, h1, text)
@@ -11,13 +12,13 @@ data Action
 
 type State =
   { route :: Route
-  , allSeries :: Array Exercise.ExerciseSeries
+  , program :: Array Series
   }
 
 init :: State
 init =
   { route: NotFound
-  , allSeries: Data.beginnerSeries 
+  , program: Data.beginnerProgram 
   }
 
 update :: Action -> State -> State
@@ -29,6 +30,6 @@ view state =
     []
     [ h1 [] [ text "Convict Conditioning" ]
     , case state.route of
-        Home -> Exercise.view state.allSeries
+        Home -> View.view state.program
         NotFound -> NotFound.view state
     ]
